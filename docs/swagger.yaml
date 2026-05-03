@@ -1,0 +1,107 @@
+basePath: /
+definitions:
+  domain.CreateProductData:
+    properties:
+      data1:
+        type: string
+      data2:
+        type: string
+    type: object
+  domain.CreateProductRequest:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      sale_price:
+        type: number
+    required:
+    - name
+    - price
+    type: object
+  domain.CreateProductResponse:
+    properties:
+      data: {}
+      error_code:
+        type: string
+      successful:
+        type: boolean
+    type: object
+  domain.PatchProductRequest:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      sale_price:
+        type: number
+    type: object
+  domain.PatchProductResponse:
+    properties:
+      error_code:
+        type: string
+      successful:
+        type: boolean
+    type: object
+host: localhost:5000
+info:
+  contact: {}
+  description: Product API with PostgreSQL
+  title: Product API
+  version: "1.0"
+paths:
+  /product:
+    post:
+      consumes:
+      - application/json
+      description: Create a new product.
+      parameters:
+      - description: Product details
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/domain.CreateProductRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/domain.CreateProductResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/domain.CreateProductData'
+              type: object
+      summary: Create Product
+  /product/{id}:
+    patch:
+      consumes:
+      - application/json
+      description: Update a product's details by ID.
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Product fields to update
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/domain.PatchProductRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.PatchProductResponse'
+      summary: Update Product
+swagger: "2.0"
